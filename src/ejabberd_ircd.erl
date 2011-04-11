@@ -975,7 +975,12 @@ make_param_string([LastParam], AlwaysQuote) ->
 make_param_string([Param | Params], AlwaysQuote) ->
     case lists:member($\ , Param) of
 	false ->
-	    " " ++ Param ++ make_param_string(Params, AlwaysQuote)
+	    " " ++ Param ++ make_param_string(Params, AlwaysQuote);
+	true ->
+	    SafeParam = lists:map(fun($ ) -> $_;
+				     (C) -> C
+				  end, Param),
+	    " " ++ SafeParam ++ make_param_string(Params, AlwaysQuote);
     end.
 
 find_el(Name, NS, [{xmlelement, N, Attrs, _} = El|Els]) ->
